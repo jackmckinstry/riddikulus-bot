@@ -1,14 +1,25 @@
 # Created by Jack McKinstry & Michael Munhbold for HackCU 8
 
-msg = "hello hack cu"
+from keys import *
+import tweepy
+
+import requests
+
+client = tweepy.Client( bearer_token=bearer_token, 
+                        consumer_key=consumer_key, 
+                        consumer_secret=consumer_secret, 
+                        access_token=access_token, 
+                        access_token_secret=access_token_secret, 
+                        return_type = requests.Response,
+                        wait_on_rate_limit=True)
+
+msg = "Hello, HackCU 8!"
 print(msg)
 
-apiKey = input("Paste API Key: ")
+#mediaID1 = mediaID = client.media_upload("media1.png")
 
-apiKeySecret = input("Paste API Key secret: ")
+textToTweet = input("Type tweet to send out: ")
 
-bearerToken = input("Paste Bearer Token: ")
+client.create_tweet(text=textToTweet)
 
-print(apiKey)
-print(apiKeySecret)
-print(bearerToken)
+print(textToTweet + " --- sent!")
