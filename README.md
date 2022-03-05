@@ -1,4 +1,4 @@
 # riddikulus-bot
-@RiddikulusBot on Twitter
+[@RiddikulusBot](https://twitter.com/RiddikulusBot) on Twitter
 
-Created by @jackmckinstry and @mimu5583 for HackCU 8
+Created by [@jackmckinstry](https://github.com/jackmckinstry) and [@mimu5583](https://github.com/mimu5583) for HackCU 8
