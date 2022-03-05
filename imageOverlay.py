@@ -7,8 +7,9 @@ x_offset = 262
 y_offset = 200
 l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1]] = s_img
 
+#test
 #cv2.namedWindow('Display image')          ## create window for display
-#cv2.imshow('Display image', l_img)
+#cv2.imshow('Display image', l_img)        ##show img in display
 #cv2.waitKey(5000)  
 
 Image.fromarray(l_img).save("img_result.jpg")
