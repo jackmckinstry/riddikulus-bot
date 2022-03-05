@@ -1,2 +1,2 @@
-msg = "foley is dumb"
+msg = "hello hack cu"
 print(msg)
