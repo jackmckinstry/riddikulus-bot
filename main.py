@@ -2,9 +2,6 @@
 
 # keys.py is private, not tracked in repo, contains secret tokens
 from keys import *
-from imageOverlay import *
-from imageOverlayFormat import *
-from gitOverlay import *
 
 import tweepy
 import pyimgur
@@ -29,6 +26,7 @@ run = True
 
 ### only run the loop and look for tweets to respond to once per minute
 while(run):
+    run = False # TODO remove so can loop
     # 1500192103485218816 is @riddikulusbot's twitter ID
     ### parse data
     res = json.loads(client.get_users_mentions(id='1500192103485218816').content)
@@ -42,20 +40,24 @@ while(run):
         tweet = json.loads(tweetResp.content)
         authorUsername = (tweet['includes']['users'][0]['username']) # author of tweet
         
-        print(tweetID)
-        print(tweetMessage)
-        print (authorUsername)
-
-        if tweetIDsResponded.__contains__(tweetID):
-            print('hi')
-
-        run = False # TODO remove
+        print("ID: " + tweetID)
+        print("Message: " + tweetMessage)
+        print ("Author: " + authorUsername)
 
         ### check list to see if tweet ID is unique
-        ### if tweet is unique, not in list:
+        if tweetIDsResponded.__contains__(tweetID):
+            print("Already responded to this tweet")
+        else:
+            ### if tweet is unique, not in list:
+            print(tweetMessage.lower())
+
             ### check for spell in message
+            
             ### if no spell, tweet muggle reply and link to spells to cast
+           
+
             ### if spell, download user's profile picture and continue
+           
             ### place profile picture on appropriate gif for spell
             ### upload image to imgur
             # path = "wizardRobot.jpg" # TODO, change this image path
@@ -78,4 +80,4 @@ while(run):
             ### append ID to list of tweets responded to, so it isn't responded to multiple times
             # tweetIDsResponded.append("ID HERE")
     ### sleep for 60 seconds before repeating loop, twitter caps us at 500k requests per month, each mention request = 10
-    # time.sleep(6000) # TODO reduce to 60 
+    # time.sleep(6000) # TODO reduce to 60, and uncommment
