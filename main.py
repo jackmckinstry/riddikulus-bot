@@ -106,31 +106,31 @@ while(run):
                     ### call image overlay method here with spell name
                     produceGif(spell)
 
-                    ### upload image to imgur
-                    path = "output.gif"
-                    im = pyimgur.Imgur(imgur_client_id)
-                    titleName = authorUsername + " casts " + spell + "!"
-                    uploaded_image = im.upload_image(path, title=titleName)
-                    print(uploaded_image.link)
+                ### upload image to imgur
+                path = "output.gif"
+                im = pyimgur.Imgur(imgur_client_id)
+                titleName = authorUsername + " casts " + spell + "!"
+                uploaded_image = im.upload_image(path, title=titleName)
+                print(uploaded_image.link)
 
-                    ### if muggle, custom tweet text
-                    if spell == "muggle":
-                        tweet_text = "@" + authorUsername + " Your tweet doesn't contain a spell you can cast, muggle! Check out the spells you can cast at the link in my bio."
-                    else:
-                        tweet_text = "@" + authorUsername + " casts " + spell + "!"
-                    
-                    ### respond to tweet with appropriate image
-                    img_link = uploaded_image.link
-                    img_link = img_link.replace('https://i.', '')
-                    img_link = img_link.replace('.png', '')
-                    tweet_text += " " + img_link
+                ### if muggle, custom tweet text
+                if spell == "muggle":
+                    tweet_text = "@" + authorUsername + " Your tweet doesn't contain a spell you can cast, muggle! Check out the spells you can cast at the link in my bio."
+                else:
+                    tweet_text = "@" + authorUsername + " casts " + spell + "!"
+                
+                ### respond to tweet with appropriate image
+                img_link = uploaded_image.link
+                img_link = img_link.replace('https://i.', '')
+                img_link = img_link.replace('.png', '')
+                tweet_text += " " + img_link
 
-                    # make / send tweet
-                    client.create_tweet(text=tweet_text,in_reply_to_tweet_id=tweetID)
-                    print(tweet_text + " --- tweeted!")
+                # make / send tweet
+                client.create_tweet(text=tweet_text,in_reply_to_tweet_id=tweetID)
+                print(tweet_text + " --- tweeted!")
 
-                    ### append ID to list of tweets responded to, so it isn't responded to multiple times
-                    tweetIDsResponded.append(tweetID)
+                ### append ID to list of tweets responded to, so it isn't responded to multiple times
+                tweetIDsResponded.append(tweetID)
     else:
         print ("No mentions detected")
     
