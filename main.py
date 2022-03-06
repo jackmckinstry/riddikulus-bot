@@ -128,6 +128,6 @@ while(run):
                 ### append ID to list of tweets responded to, so it isn't responded to multiple times
                 tweetIDsResponded.append(tweetID)
             run = False # TODO remove
-    ### sleep for 120 seconds before repeating loop, 
+    ### sleep for 120 seconds / 2 minutes before repeating loop, 
     ### twitter caps us at 500k tweets requests per month, and 100 calls per hour
     # time.sleep(120) # TODO uncommment this
