@@ -11,7 +11,7 @@ Simply send a tweet that begins with @RiddikulusBot and include one of the spell
 For example:
 > @RiddikulusBot Expelliarmus!
 
-## Spells you can tweet at the bot:
+### Spells you can tweet at the bot:
 - Accio
 - Alohomora
 - Avada Kedavra
