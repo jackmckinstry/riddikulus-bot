@@ -106,7 +106,7 @@ def produceGif(status):
     yPos = yOffSet(status)
     resizeVal = reSize(status)
 
-    background = Image.open("pfp.png").resize((resizeVal,resizeVal))
+    background = Image.open("pfp.jpg").resize((resizeVal,resizeVal))
 
     animated_gif = Image.open(toOpen)
 
