@@ -9,7 +9,7 @@ Depends on tweepy, opencv, pillow, and pyimgur libraries
 Simply send a tweet that begins with @RiddikulusBot and include one of the spells below to receive a customized reply!
 
 For example:
-> @RiddikulusBot wingardium leviosa
+> @RiddikulusBot Expelliarmus!
 
 ## Spells you can tweet at the bot:
 - Accio
