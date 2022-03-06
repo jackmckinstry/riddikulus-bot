@@ -106,7 +106,10 @@ def produceGif(status):
     yPos = yOffSet(status)
     resizeVal = reSize(status)
 
-    background = Image.open("pfp.jpg").resize((resizeVal,resizeVal))
+    if status != "muggle":
+        background = Image.open("pfp.jpg").resize((resizeVal,resizeVal))
+    else:
+        background = Image.open("wizardRobot.jpg").resize((resizeVal,resizeVal))
 
     animated_gif = Image.open(toOpen)
 
