@@ -4,9 +4,11 @@
 
 # keys.py is private, not tracked in repo, contains secret tokens
 from keys import *
+from imageOverlay import *
 import tweepy
 import pyimgur
 import requests
+import time
 
 client = tweepy.Client( bearer_token=bearer_token, 
                         consumer_key=consumer_key, 
@@ -16,21 +18,44 @@ client = tweepy.Client( bearer_token=bearer_token,
                         return_type = requests.Response,
                         wait_on_rate_limit=True)
 
-msg = "Hello, HackCU 8!"
-print(msg)
+tweetIDsResponded = list()
 
-path = "wizardRobot.jpg" # TODO, change this path
+print('Starting Riddikulus Bot...')
 
-im = pyimgur.Imgur(imgur_client_id)
-uploaded_image = im.upload_image(path, title="first tweet test sending image")
-print(uploaded_image.link)
+### only run the loop and look for tweets to respond to once per minute
+while(True):
+    # 1500192103485218816 is @riddikulusbot's twitter ID
+    print(client.get_users_mentions(id='1500192103485218816').content)
 
-tweet_text = input("Type tweet to send out: ")
-img_link = uploaded_image.link
-img_link = img_link.replace('https://i.', '')
-img_link = img_link.replace('.png', '')
-tweet_text += " " + img_link
+    ### parse data
 
-client.create_tweet(text=tweet_text)
+    ### for tweets in mentioned:
+        ### check list to see if tweet ID is unique
+        # tweetIDsResponded.__contains__("ID HERE") # ensure that haven't responded to tweet already 
+        ### if tweet is unique, not in list:
+            ### check for spell in message
+            ### if no spell, tweet muggle reply and link to spells to cast
+            ### if spell, download user's profile picture and continue
+            ### place profile picture on appropriate gif for spell
+            ### upload image to imgur
+            # path = "wizardRobot.jpg" # TODO, change this image path
+            # im = pyimgur.Imgur(imgur_client_id) TODO
+            # uploaded_image = im.upload_image(path, title="NAME + SPELL NAME") TODO
+            # print(uploaded_image.link) TODO
 
-print(tweet_text + " --- sent!")
+
+            ### respond to tweet with appropriate image
+            # tweet_text = "@ USERNAME + SPELL NAME"
+            # img_link = uploaded_image.link
+            # img_link = img_link.replace('https://i.', '')
+            # img_link = img_link.replace('.png', '')
+            # tweet_text += " " + img_link
+
+            #client.create_tweet(text=tweet_text)
+            
+            # print(tweet_text + " --- tweeted!")
+
+            ### append ID to list of tweets responded to, so it isn't responded to multiple times
+            # tweetIDsResponded.append("ID HERE")
+    ### sleep for 60 seconds before repeating loop, twitter caps us at 500k requests per month, each mention request = 10
+    time.sleep(60) 
