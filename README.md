@@ -3,12 +3,22 @@
 
 Created by [@jackmckinstry](https://github.com/jackmckinstry) and [@mimu5583](https://github.com/mimu5583) for HackCU 8
 
-Depends on tweepy and pyimgur libraries
+Depends on tweepy, opencv, pillow, and pyimgur libraries
 
-## How to use
-### Simply send a tweet that begins with @RiddikulusBot and includes one of the spells below to receive a customized reply!
+### How to Use:
+Simply send a tweet that begins with @RiddikulusBot and includes one of the spells below to receive a customized reply!
+
+For example:
+> @RiddikulusBot wingardium leviosa
 
 ## Spells you can tweet at the bot:
-- work in progress
-- coming soon
-- not sure yet
+- Accio
+- Alohomora
+- Avada Kedavra
+- Expecto Patronum
+- Expelliarmus
+- Lumos
+- Obliviate
+- Riddikulus
+- Sectum Sempra
+- Wingardium Leviosa
