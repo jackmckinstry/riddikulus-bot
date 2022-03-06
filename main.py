@@ -2,6 +2,7 @@
 
 # keys.py is private, not tracked in repo, contains secret tokens
 from keys import *
+from gitOverlay import *
 
 import tweepy
 import pyimgur
@@ -23,7 +24,7 @@ tweetIDsResponded = list()
 
 print('Starting Riddikulus Bot...')
 
-run = True # TODO remove when done, set to while(true)
+run = True
 ### only run the loop and look for tweets to respond to once per minute
 while(run):
     # 1500192103485218816 is @riddikulusbot's twitter ID
@@ -37,11 +38,22 @@ while(run):
         tweetMessage = (res['data'][x]['text']) # message in tweet
         tweetResp = client.get_tweet(id=res['data'][x]['id'],expansions='author_id')
         tweet = json.loads(tweetResp.content)
-        authorUsername = (tweet['includes']['users'][0]['username']) # author of tweet
+        authorUsername = (tweet['includes']['users'][0]['username']) # author of tweet's twitter handle
+        authorID = (tweet['includes']['users'][0]['id']) # UUID of author of tweet's twitter account
         
-        print("ID: " + tweetID)
+        print("Tweet ID: " + tweetID)
         print("Message: " + tweetMessage)
-        print ("Author: " + authorUsername)
+        print("Author: " + authorUsername)
+        print("Author ID: " + authorID)
+
+        # get profile picture of user
+        userResp = client.get_user(id=authorID,user_fields=['profile_image_url'])
+        userInfo = json.loads(userResp.content)
+        print (userInfo['data']['profile_image_url']) # TODO remove
+        profPic = userInfo['data']['profile_image_url']
+        # make photo larger than original grabbed, higher quality
+        profURL = profPic.replace('_normal.jpg', '_400x400.jpg')
+        print(profURL)
 
         ### check list to see if tweet ID is unique
         if tweetIDsResponded.__contains__(tweetID):
@@ -78,21 +90,22 @@ while(run):
             ### if no spell, tweet muggle reply and link to spells to cast
             if (spell == "muggle"):
                 print("muggle")
-
-                # TODO call function for muggle gif
+                produceGif("muggle")
             
             ### if spell detected, continue here
             else:
                 print(spell)
 
-                ### download user's profile picture
+                ### download user's profile picture, save image as pfp.png
+                # TODO
                 # TODO 
 
                 ### place profile picture on appropriate gif for spell
-                # TODO # call image overlay method here with spell name
+                ### call image overlay method here with spell name
+                produceGif(spell)
 
             ### upload image to imgur
-            path = "wizardRobot.jpg" # TODO, change this image path
+            path = "output.gif"
             im = pyimgur.Imgur(imgur_client_id)
             titleName = authorUsername + " casts " + spell + "!"
             uploaded_image = im.upload_image(path, title=titleName)
