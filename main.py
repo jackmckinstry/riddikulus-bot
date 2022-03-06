@@ -3,6 +3,8 @@
 # keys.py is private, not tracked in repo, contains secret tokens
 from keys import *
 from imageOverlay import *
+from imageOverlayFormat import *
+from gitOverlay import *
 
 import tweepy
 import pyimgur
