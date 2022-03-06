@@ -20,7 +20,7 @@ def fileName(status):
             return "gif/obliviateGif.gif"
         case "riddikulus":
             return "gif/riddikulusGif.gif"
-        case "sectumempra":
+        case "sectum sempra":
             return "gif/sectumSempraGif.gif"
         case "wingardium leviosa":
             return "gif/wingardiumLeviosaGif.gif"
@@ -45,7 +45,7 @@ def xOffSet(status):
             return 120
         case "riddikulus":
             return 220
-        case "sectumempra":
+        case "sectum sempra":
             return 400
         case "wingardium leviosa":
             return 35
@@ -70,7 +70,7 @@ def yOffSet(status):
             return 0
         case "riddikulus":
             return 90
-        case "sectumempra":
+        case "sectum sempra":
             return 45
         case "wingardium leviosa":
             return 45
@@ -95,7 +95,7 @@ def reSize(status):
             return 80
         case "riddikulus":
             return 120
-        case "sectumempra":
+        case "sectum sempra":
             return 60
         case "wingardium leviosa":
             return 95
