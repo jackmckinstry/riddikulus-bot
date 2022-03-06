@@ -1,8 +1,11 @@
 # Created by Jack McKinstry & Michael Munhbold for HackCU 8
+# collection of potential gifs to use: https://imgur.com/gallery/1hmdv
 
+
+# keys.py is private, not tracked in repo, contains secret tokens
 from keys import *
 import tweepy
-
+import pyimgur
 import requests
 
 client = tweepy.Client( bearer_token=bearer_token, 
@@ -16,10 +19,18 @@ client = tweepy.Client( bearer_token=bearer_token,
 msg = "Hello, HackCU 8!"
 print(msg)
 
-#mediaID1 = mediaID = client.media_upload("media1.png")
+path = "wizardRobot.jpg" # TODO, change this path
 
-textToTweet = input("Type tweet to send out: ")
+im = pyimgur.Imgur(imgur_client_id)
+uploaded_image = im.upload_image(path, title="first tweet test sending image")
+print(uploaded_image.link)
 
-client.create_tweet(text=textToTweet)
+tweet_text = input("Type tweet to send out: ")
+img_link = uploaded_image.link
+img_link = img_link.replace('https://i.', '')
+img_link = img_link.replace('.png', '')
+tweet_text += " " + img_link
 
-print(textToTweet + " --- sent!")
+client.create_tweet(text=tweet_text)
+
+print(tweet_text + " --- sent!")
