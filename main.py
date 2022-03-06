@@ -22,11 +22,10 @@ client = tweepy.Client( bearer_token=bearer_token,
 tweetIDsResponded = list()
 
 print('Starting Riddikulus Bot...')
-run = True
 
+run = True # TODO remove when done, set to while(true)
 ### only run the loop and look for tweets to respond to once per minute
 while(run):
-    run = False # TODO remove so can loop
     # 1500192103485218816 is @riddikulusbot's twitter ID
     ### parse data
     res = json.loads(client.get_users_mentions(id='1500192103485218816').content)
@@ -49,35 +48,74 @@ while(run):
             print("Already responded to this tweet")
         else:
             ### if tweet is unique, not in list:
-            print(tweetMessage.lower())
+            spell = ""
 
             ### check for spell in message
-            
+            if tweetMessage.lower().__contains__("accio"):
+                spell = "accio"
+            elif tweetMessage.lower().__contains__("alohomora"):
+                spell = "alohomora"
+            elif tweetMessage.lower().__contains__("avada kedavra"):
+                spell = "avada kedavra"
+            elif tweetMessage.lower().__contains__("expecto patronum"):
+                spell = "expecto patronum"
+            elif tweetMessage.lower().__contains__("expelliarmus"):
+                spell = "expelliarmus"
+            elif tweetMessage.lower().__contains__("lumos"):
+                spell = "lumos"
+            elif tweetMessage.lower().__contains__("obliviate"):
+                spell = "obliviate"
+            # extra space on this case so @riddikulusbot isn't considered casting this spell
+            elif tweetMessage.lower().__contains__("riddikulus "):
+                spell = "riddikulus"
+            elif tweetMessage.lower().__contains__("sectum sempra"):
+                spell = "sectum sempra"
+            elif tweetMessage.lower().__contains__("wingardium leviosa"):
+                spell = "wingardium leviosa"
+            else:
+                spell = "muggle"
+
             ### if no spell, tweet muggle reply and link to spells to cast
-           
+            if (spell == "muggle"):
+                print("muggle")
 
-            ### if spell, download user's profile picture and continue
-           
-            ### place profile picture on appropriate gif for spell
-            ### upload image to imgur
-            # path = "wizardRobot.jpg" # TODO, change this image path
-            # im = pyimgur.Imgur(imgur_client_id) TODO
-            # uploaded_image = im.upload_image(path, title="NAME + SPELL NAME") TODO
-            # print(uploaded_image.link) TODO
-
-
-            ### respond to tweet with appropriate image
-            # tweet_text = "@ USERNAME + SPELL NAME"
-            # img_link = uploaded_image.link
-            # img_link = img_link.replace('https://i.', '')
-            # img_link = img_link.replace('.png', '')
-            # tweet_text += " " + img_link
-
-            #client.create_tweet(text=tweet_text)
+                # TODO call function for muggle gif
             
-            # print(tweet_text + " --- tweeted!")
+            ### if spell detected, continue here
+            else:
+                print(spell)
+
+                ### download user's profile picture
+                # TODO 
+
+                ### place profile picture on appropriate gif for spell
+                # TODO # call image overlay method here with spell name
+
+            ### upload image to imgur
+            path = "wizardRobot.jpg" # TODO, change this image path
+            im = pyimgur.Imgur(imgur_client_id)
+            titleName = authorUsername + " casts " + spell + "!"
+            uploaded_image = im.upload_image(path, title=titleName)
+            print(uploaded_image.link)
+
+            ### if muggle, custom tweet text
+            if spell == "muggle":
+                tweet_text = "@" + authorUsername + " Your tweet doesn't contain a spell you can cast, muggle! Check out the spells you can cast at the link in my bio."
+            else:
+                tweet_text = "@" + authorUsername + " casts " + spell + "!"
+            
+            ### respond to tweet with appropriate image
+            img_link = uploaded_image.link
+            img_link = img_link.replace('https://i.', '')
+            img_link = img_link.replace('.png', '')
+            tweet_text += " " + img_link
+
+            # client.create_tweet(text=tweet_text) # TODO uncomment to make tweet
+            
+            print(tweet_text + " --- tweeted!")
 
             ### append ID to list of tweets responded to, so it isn't responded to multiple times
-            # tweetIDsResponded.append("ID HERE")
+            tweetIDsResponded.append(tweetID)
+            run = False # TODO remove
     ### sleep for 60 seconds before repeating loop, twitter caps us at 500k requests per month, each mention request = 10
-    # time.sleep(6000) # TODO reduce to 60, and uncommment
+    # time.sleep(60) # TODO uncommment this
