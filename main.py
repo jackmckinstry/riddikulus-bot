@@ -23,27 +23,33 @@ client = tweepy.Client( bearer_token=bearer_token,
 tweetIDsResponded = list()
 
 print('Starting Riddikulus Bot...')
-print('json: ' + client.get_users_mentions(id='1500192103485218816').json)
-print('content: ' + client.get_users_mentions(id='1500192103485218816').content)
-print('content 2: ' + client.get_users_mentions(id='1500192103485218816')._content)
-print('json: ' + client.get_users_mentions(id='1500192103485218816'))
-
-tweets = client.get_users_mentions(id='1500192103485218816').json
-print(tweets.keys())
-# print(f'Tweet id:{tweet.id}')
-
-# print(res['id'] + " - " + res['text'])
+run = True
 
 ### only run the loop and look for tweets to respond to once per minute
-#while(True):
+while(run):
     # 1500192103485218816 is @riddikulusbot's twitter ID
-    # print(client.get_users_mentions(id='1500192103485218816').content)
-
     ### parse data
+    res = json.loads(client.get_users_mentions(id='1500192103485218816').content)
     
     ### for tweets in mentioned:
+    for x in range(0, res['meta']['result_count']):
+        print(x)
+        tweetID = (res['data'][x]['id']) # tweet ID
+        tweetMessage = (res['data'][x]['text']) # message in tweet
+        tweetResp = client.get_tweet(id=res['data'][x]['id'],expansions='author_id')
+        tweet = json.loads(tweetResp.content)
+        authorUsername = (tweet['includes']['users'][0]['username']) # author of tweet
+        
+        print(tweetID)
+        print(tweetMessage)
+        print (authorUsername)
+
+        if tweetIDsResponded.__contains__(tweetID):
+            print('hi')
+
+        run = False # TODO remove
+
         ### check list to see if tweet ID is unique
-        # tweetIDsResponded.__contains__("ID HERE") # ensure that haven't responded to tweet already 
         ### if tweet is unique, not in list:
             ### check for spell in message
             ### if no spell, tweet muggle reply and link to spells to cast
@@ -70,4 +76,4 @@ print(tweets.keys())
             ### append ID to list of tweets responded to, so it isn't responded to multiple times
             # tweetIDsResponded.append("ID HERE")
     ### sleep for 60 seconds before repeating loop, twitter caps us at 500k requests per month, each mention request = 10
-    #time.sleep(60) 
+    # time.sleep(6000) # TODO reduce to 60 
