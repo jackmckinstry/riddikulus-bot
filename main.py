@@ -1,4 +1,5 @@
 # Created by Jack McKinstry & Michael Munhbold for HackCU 8
+# Python version 3.10.2
 
 # keys.py is private, not tracked in repo, contains secret tokens
 from keys import *
@@ -10,6 +11,7 @@ import pyimgur
 import json
 import requests
 import time
+import urllib.request
 
 # sign into api with account information
 client = tweepy.Client( bearer_token=bearer_token, 
@@ -31,103 +33,112 @@ while(run):
     res = json.loads(client.get_users_mentions(id=twitter_user_id).content)
     
     ### for tweets in mentioned:
-    for x in range(0, res['meta']['result_count']):
-        print(x)
-        tweetID = (res['data'][x]['id']) # tweet ID
-        tweetMessage = (res['data'][x]['text']) # message in tweet
-        tweetResp = client.get_tweet(id=res['data'][x]['id'],expansions='author_id')
-        tweet = json.loads(tweetResp.content)
-        authorUsername = (tweet['includes']['users'][0]['username']) # author of tweet's twitter handle
-        authorID = (tweet['includes']['users'][0]['id']) # UUID of author of tweet's twitter account
-        
-        print("Tweet ID: " + tweetID)
-        print("Message: " + tweetMessage)
-        print("Author: " + authorUsername)
-        print("Author ID: " + authorID)
-
-        ### check list to see if tweet ID is unique
-        if tweetIDsResponded.__contains__(tweetID):
-            print("Already responded to this tweet")
-        else:
-            ### if tweet is unique, not in list:
-            spell = ""
-
-            ### check for spell in message
-            if tweetMessage.lower().__contains__("accio"):
-                spell = "accio"
-            elif tweetMessage.lower().__contains__("alohomora"):
-                spell = "alohomora"
-            elif tweetMessage.lower().__contains__("avada kedavra"):
-                spell = "avada kedavra"
-            elif tweetMessage.lower().__contains__("expecto patronum"):
-                spell = "expecto patronum"
-            elif tweetMessage.lower().__contains__("expelliarmus"):
-                spell = "expelliarmus"
-            elif tweetMessage.lower().__contains__("lumos"):
-                spell = "lumos"
-            elif tweetMessage.lower().__contains__("obliviate"):
-                spell = "obliviate"
-            # extra space on this case so @riddikulusbot isn't considered casting this spell
-            elif tweetMessage.lower().__contains__("riddikulus "):
-                spell = "riddikulus"
-            elif tweetMessage.lower().__contains__("sectum sempra"):
-                spell = "sectum sempra"
-            elif tweetMessage.lower().__contains__("wingardium leviosa"):
-                spell = "wingardium leviosa"
-            else:
-                spell = "muggle"
-
-            ### if no spell, tweet muggle reply and link to spells to cast
-            if (spell == "muggle"):
-                print("muggle")
-                produceGif("muggle")
+    if res['meta']['result_count'] > 0:
+        for x in range(0, res['meta']['result_count']):
+            print(x)
+            tweetID = (res['data'][x]['id']) # tweet ID
             
-            ### if spell detected, continue here
+            print("Tweet ID: " + tweetID)
+
+            ### check list to see if tweet ID is unique
+            if tweetIDsResponded.__contains__(tweetID):
+                print("Already responded to this tweet")
             else:
-                print(spell)
+                tweetMessage = (res['data'][x]['text']) # message in tweet
+                tweetResp = client.get_tweet(id=res['data'][x]['id'],expansions='author_id')
+                tweet = json.loads(tweetResp.content)
+                authorUsername = (tweet['includes']['users'][0]['username']) # author of tweet's twitter handle
+                authorID = (tweet['includes']['users'][0]['id']) # UUID of author of tweet's twitter account
+                print("Message: " + tweetMessage)
+                print("Author: " + authorUsername)
+                print("Author ID: " + authorID)
 
-                # get profile picture of user from Twitter
-                userResp = client.get_user(id=authorID,user_fields=['profile_image_url'])
-                userInfo = json.loads(userResp.content)
-                print (userInfo['data']['profile_image_url']) # TODO remove
-                profPic = userInfo['data']['profile_image_url']
-                # make photo larger than original grabbed, higher quality
-                profURL = profPic.replace('_normal.jpg', '_400x400.jpg')
-                print(profURL)
+                ### if tweet is unique, not in list:
+                spell = ""
 
-                ### download user's profile picture, save image as pfp.png
-                # TODO
-
-                ### place profile picture on appropriate gif for spell
-                ### call image overlay method here with spell name
-                produceGif(spell)
-
-                ### upload image to imgur
-                path = "output.gif"
-                im = pyimgur.Imgur(imgur_client_id)
-                titleName = authorUsername + " casts " + spell + "!"
-                uploaded_image = im.upload_image(path, title=titleName)
-                print(uploaded_image.link)
-
-                ### if muggle, custom tweet text
-                if spell == "muggle":
-                    tweet_text = "@" + authorUsername + " Your tweet doesn't contain a spell you can cast, muggle! Check out the spells you can cast at the link in my bio."
+                ### check for spell in message
+                if tweetMessage.lower().__contains__("accio"):
+                    spell = "accio"
+                elif tweetMessage.lower().__contains__("alohomora"):
+                    spell = "alohomora"
+                elif tweetMessage.lower().__contains__("avada kedavra"):
+                    spell = "avada kedavra"
+                elif tweetMessage.lower().__contains__("expecto patronum"):
+                    spell = "expecto patronum"
+                elif tweetMessage.lower().__contains__("expelliarmus"):
+                    spell = "expelliarmus"
+                elif tweetMessage.lower().__contains__("lumos"):
+                    spell = "lumos"
+                elif tweetMessage.lower().__contains__("obliviate"):
+                    spell = "obliviate"
+                # extra space on this case so @riddikulusbot isn't considered casting this spell
+                elif tweetMessage.lower().__contains__(" riddikulus"):
+                    spell = "riddikulus"
+                elif tweetMessage.lower().__contains__("sectum sempra"):
+                    spell = "sectum sempra"
+                elif tweetMessage.lower().__contains__("wingardium leviosa"):
+                    spell = "wingardium leviosa"
                 else:
-                    tweet_text = "@" + authorUsername + " casts " + spell + "!"
-                
-                ### respond to tweet with appropriate image
-                img_link = uploaded_image.link
-                img_link = img_link.replace('https://i.', '')
-                img_link = img_link.replace('.png', '')
-                tweet_text += " " + img_link
+                    spell = "muggle"
 
-                # client.create_tweet(text=tweet_text) # TODO uncomment to make tweet
+                ### if no spell, tweet muggle reply and link to spells to cast
+                if (spell == "muggle"):
+                    print("muggle")
+                    produceGif("muggle")
                 
-                print(tweet_text + " --- tweeted!")
+                ### if spell detected, continue here
+                else:
+                    print(spell)
 
-                ### append ID to list of tweets responded to, so it isn't responded to multiple times
-                tweetIDsResponded.append(tweetID)
-            run = False # TODO remove
+                    # get profile picture of user from Twitter
+                    userResp = client.get_user(id=authorID,user_fields=['profile_image_url'])
+                    userInfo = json.loads(userResp.content)
+                    profPic = userInfo['data']['profile_image_url']
+                    # make photo larger than original grabbed, higher quality
+                    profURL = profPic.replace('_normal.jpg', '_400x400.jpg')
+                    print(profURL)
+
+                    ### download user's profile picture, save image as pfp.png
+                    # download profile picture from link
+                    urllib.request.urlretrieve(profURL, "pfp.jpg")
+
+                    ### place profile picture on appropriate gif for spell
+                    ### call image overlay method here with spell name
+                    produceGif(spell)
+
+                    ### upload image to imgur
+                    path = "output.gif"
+                    im = pyimgur.Imgur(imgur_client_id)
+                    titleName = authorUsername + " casts " + spell + "!"
+                    uploaded_image = im.upload_image(path, title=titleName)
+                    print(uploaded_image.link)
+
+                    ### if muggle, custom tweet text
+                    if spell == "muggle":
+                        tweet_text = "@" + authorUsername + " Your tweet doesn't contain a spell you can cast, muggle! Check out the spells you can cast at the link in my bio."
+                    else:
+                        tweet_text = "@" + authorUsername + " casts " + spell + "!"
+                    
+                    ### respond to tweet with appropriate image
+                    img_link = uploaded_image.link
+                    img_link = img_link.replace('https://i.', '')
+                    img_link = img_link.replace('.png', '')
+                    tweet_text += " " + img_link
+
+                    # make / send tweet
+                    client.create_tweet(text=tweet_text,in_reply_to_tweet_id=tweetID)
+                    print(tweet_text + " --- tweeted!")
+
+                    ### append ID to list of tweets responded to, so it isn't responded to multiple times
+                    tweetIDsResponded.append(tweetID)
+    else:
+        print ("No mentions detected")
+    
     ### sleep for 120 seconds / 2 minutes before repeating loop, 
     ### twitter caps us at 500k tweets requests per month, and 100 calls per hour
-    # time.sleep(120) # TODO uncommment this
+    sleepTime = 120
+    while (sleepTime > 0):
+        sleepMsg = str(sleepTime) + " seconds remaining before next loop"
+        print(sleepMsg)
+        time.sleep(20)
+        sleepTime = sleepTime-20
