@@ -1,20 +1,38 @@
 from PIL import Image, ImageSequence
 
-background = Image.open("img.jpg")
-animated_gif = Image.open("GIFF.gif")
+def fileName(status):
+    match status:
+        case "accio":
+            return "accioGif.gif"
+        case "alohomora":
+            return "alohomoraGif.gif"
+        case "avada kedavra":
+            return "avadaKedavraGif.gif"
+        case "expecto patronum":
+            return "expectoPatronumGif.gif"
+        case "expelliarmus":
+            return "expelliarmusGif.gif"
+        case "lumos":
+            return "lumosGif.gif"
+        case "":
+            return "muggleGif.gif"
+        case "obliviate":
+            return "obliviateGif.gif"
+        case "riddikulus":
+            return "riddikulusGif.gif"
+        case "sectumempra":
+            return "sectumSempraGif.gif"
+        case "wingardium leviosa":
+            return "wingardiumLeviosaGif.gif"
+
+background = Image.open("wizardRobot.jpg").resize((100,100))
+
+animated_gif = Image.open("gif/accioGif.gif")
 
 frames = []
 for frame in ImageSequence.Iterator(animated_gif):
-    output = background.copy()
-    frame_px = frame.load()
-    output_px = output.load()
-    transparent_foreground = frame.convert('RGBA')
-    transparent_foreground_px = transparent_foreground.load()
-    for x in range(frame.width):
-        for y in range(frame.height):
-            if frame_px[x, y] in (frame.info["background"], frame.info["transparency"]):
-                continue
-            output_px[x, y] = transparent_foreground_px[x, y]
-    frames.append(output)
+    frame = frame.copy()
+    frame.paste(background, (130,40))
+    frames.append(frame)
 
-frames[0].save('output.gif', save_all=True, append_images=frames[1:-1]) 
+frames[0].save('output.gif', save_all=True, append_images=frames[1:]) 
