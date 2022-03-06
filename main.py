@@ -27,9 +27,8 @@ print('Starting Riddikulus Bot...')
 run = True
 ### only run the loop and look for tweets to respond to once per minute
 while(run):
-    # 1500192103485218816 is @riddikulusbot's twitter ID
     ### parse data
-    res = json.loads(client.get_users_mentions(id='1500192103485218816').content)
+    res = json.loads(client.get_users_mentions(id=twitter_user_id).content)
     
     ### for tweets in mentioned:
     for x in range(0, res['meta']['result_count']):
@@ -45,15 +44,6 @@ while(run):
         print("Message: " + tweetMessage)
         print("Author: " + authorUsername)
         print("Author ID: " + authorID)
-
-        # get profile picture of user
-        userResp = client.get_user(id=authorID,user_fields=['profile_image_url'])
-        userInfo = json.loads(userResp.content)
-        print (userInfo['data']['profile_image_url']) # TODO remove
-        profPic = userInfo['data']['profile_image_url']
-        # make photo larger than original grabbed, higher quality
-        profURL = profPic.replace('_normal.jpg', '_400x400.jpg')
-        print(profURL)
 
         ### check list to see if tweet ID is unique
         if tweetIDsResponded.__contains__(tweetID):
@@ -96,39 +86,48 @@ while(run):
             else:
                 print(spell)
 
+                # get profile picture of user from Twitter
+                userResp = client.get_user(id=authorID,user_fields=['profile_image_url'])
+                userInfo = json.loads(userResp.content)
+                print (userInfo['data']['profile_image_url']) # TODO remove
+                profPic = userInfo['data']['profile_image_url']
+                # make photo larger than original grabbed, higher quality
+                profURL = profPic.replace('_normal.jpg', '_400x400.jpg')
+                print(profURL)
+
                 ### download user's profile picture, save image as pfp.png
                 # TODO
-                # TODO 
 
                 ### place profile picture on appropriate gif for spell
                 ### call image overlay method here with spell name
                 produceGif(spell)
 
-            ### upload image to imgur
-            path = "output.gif"
-            im = pyimgur.Imgur(imgur_client_id)
-            titleName = authorUsername + " casts " + spell + "!"
-            uploaded_image = im.upload_image(path, title=titleName)
-            print(uploaded_image.link)
+                ### upload image to imgur
+                path = "output.gif"
+                im = pyimgur.Imgur(imgur_client_id)
+                titleName = authorUsername + " casts " + spell + "!"
+                uploaded_image = im.upload_image(path, title=titleName)
+                print(uploaded_image.link)
 
-            ### if muggle, custom tweet text
-            if spell == "muggle":
-                tweet_text = "@" + authorUsername + " Your tweet doesn't contain a spell you can cast, muggle! Check out the spells you can cast at the link in my bio."
-            else:
-                tweet_text = "@" + authorUsername + " casts " + spell + "!"
-            
-            ### respond to tweet with appropriate image
-            img_link = uploaded_image.link
-            img_link = img_link.replace('https://i.', '')
-            img_link = img_link.replace('.png', '')
-            tweet_text += " " + img_link
+                ### if muggle, custom tweet text
+                if spell == "muggle":
+                    tweet_text = "@" + authorUsername + " Your tweet doesn't contain a spell you can cast, muggle! Check out the spells you can cast at the link in my bio."
+                else:
+                    tweet_text = "@" + authorUsername + " casts " + spell + "!"
+                
+                ### respond to tweet with appropriate image
+                img_link = uploaded_image.link
+                img_link = img_link.replace('https://i.', '')
+                img_link = img_link.replace('.png', '')
+                tweet_text += " " + img_link
 
-            # client.create_tweet(text=tweet_text) # TODO uncomment to make tweet
-            
-            print(tweet_text + " --- tweeted!")
+                # client.create_tweet(text=tweet_text) # TODO uncomment to make tweet
+                
+                print(tweet_text + " --- tweeted!")
 
-            ### append ID to list of tweets responded to, so it isn't responded to multiple times
-            tweetIDsResponded.append(tweetID)
+                ### append ID to list of tweets responded to, so it isn't responded to multiple times
+                tweetIDsResponded.append(tweetID)
             run = False # TODO remove
-    ### sleep for 60 seconds before repeating loop, twitter caps us at 500k requests per month, each mention request = 10
-    # time.sleep(60) # TODO uncommment this
+    ### sleep for 120 seconds before repeating loop, 
+    ### twitter caps us at 500k tweets requests per month, and 100 calls per hour
+    # time.sleep(120) # TODO uncommment this
