@@ -6,7 +6,7 @@ Created by [@jackmckinstry](https://github.com/jackmckinstry) and [@mimu5583](ht
 Depends on tweepy, opencv, pillow, and pyimgur libraries
 
 ### How to Use:
-Simply send a tweet that begins with @RiddikulusBot and includes one of the spells below to receive a customized reply!
+Simply send a tweet that begins with @RiddikulusBot and include one of the spells below to receive a customized reply!
 
 For example:
 > @RiddikulusBot wingardium leviosa
